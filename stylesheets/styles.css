@@ -1,0 +1,97 @@
+/*  Colors:
+desaturated white:	#fcfcfc
+beige:				#f5f5dc
+orange:				#ffae19
+purple:				#ae19ff
+*/
+
+* {
+	box-sizing:border-box;
+	line-height:150%;	
+	
+	margin:0;
+}
+
+body {
+	background-color:#f5f5dc;
+}
+
+main {
+	margin:0 auto;
+	
+	max-width:960px;
+}
+
+/*/////////////
+//  Header   //
+/////////////*/
+header {
+	color:#ffae19;
+}
+
+
+/*/////////////
+//  Nav      //
+/////////////*/
+nav {
+	padding:0;
+}
+nav ul {
+	display:inline;	
+	padding:0;
+}
+
+nav li {
+	display:inline
+}
+
+nav a {	
+	text-decoration:none;
+}
+
+/*Dropdown Menu*/
+/*TODO: Fix this*/ 
+nav .dropdown {
+	display:inline-block;
+	
+	position:relative;
+}
+nav .dropdown li {
+	display:none;
+	position:absolute;
+	
+	min-width:100px;
+	width:auto;
+	z-index:1;
+}
+nav .dropdown a {
+	display:block;
+}
+nav .dropdown:hover li {
+	display:block;
+}
+nav .dropdown li:first-child {
+	display:inline;
+	position:initial;
+}
+
+
+/*/////////////
+//  Article  //
+/////////////*/
+article {
+	background-color:#fcfcfc;
+	
+	border-top:1px solid black;
+	border-bottom:1px solid black;
+	
+	padding:25px;
+}
+
+
+/*/////////////
+//  Footer   //
+/////////////*/
+footer {
+	font-size:.9em;
+}
