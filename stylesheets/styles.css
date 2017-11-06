@@ -4,6 +4,7 @@ beige:				#f5f5dc
 dark-beige:			#c5c5ac
 darker-beige:		#a5a58c
 orange:				#ffae19
+dark-orange:		#e59c16
 
 
 purple:				#ae19ff
@@ -38,7 +39,7 @@ z-index
 }
 
 body {
-	background-color:#f5f5dc;
+	background-color:#fafafa;
 }
 
 #wrapper {
@@ -68,7 +69,7 @@ main{border-top:1px solid black; border-bottom:1px solid black}
 /*/////////////
 //  Header   //
 /////////////*/
-header{color:#ffae19; padding:10px;}
+header{color:#e59c16; padding:10px;}
 
 @media screen and (min-width:960px) {
 	header {
@@ -156,6 +157,7 @@ main {
 
 main h2 {
 	color:#8214cc;
+	
 }
 
 main h4 a{
