@@ -65,7 +65,10 @@ main{border-top:1px solid black; border-bottom:1px solid black}
 //  Header   //
 /////////////*/
 header{
-	color:#ff9428;
+	color:#50bdff;
+	
+	text-align:center;
+	
 	padding:10px;
 }
 
