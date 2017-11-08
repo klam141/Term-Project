@@ -1,9 +1,9 @@
 /*  Colors:
-Orange: #ff9428
-Sky-Blue: #9bd9ff
-Blue: #50bdff
+Orange:     #ff9428
+Sky-Blue:   #9bd9ff
+Blue:       #50bdff
 Light-Grey: #dbdbdb
-Grey: #aaaaaa
+Grey:       #aaaaaa
 */
 
 /*	Organization Guide
@@ -34,7 +34,7 @@ z-index
 }
 
 body {
-	background-color:#dbdbdb;
+	background-color:#aaaaaa;
 }
 
 #wrapper {
@@ -61,22 +61,33 @@ main{border-top:1px solid black; border-bottom:1px solid black}
 	}
 }
 
+/*Generic Classes*/
+.center {
+	text-align:center;
+}
+
+
 /*/////////////
 //  Header   //
 /////////////*/
-header{
-	color:#50bdff;
+header{	
+	text-shadow:
+		-1px 0 black, 
+		0 1px black, 
+		1px 0 black, 
+		0 -1px black
+	;
+	
+	color:#ff9428;
 	
 	text-align:center;
-	
-	padding:10px;
 }
 
 @media screen and (min-width:960px) {
 	header {
 		font-size:1.3em;
 		
-		padding:30px 30px 10px;
+		margin-top:15px;
 	}
 }
 
@@ -155,7 +166,7 @@ main {
 }
 
 main h2 {
-	color:#ff9428;
+	color:#50bdff;
 }
 
 main h4 a{
@@ -166,6 +177,20 @@ main h4 a{
 main article{
 	margin-bottom:25px;
 	width:auto;
+}
+
+main button {
+	border:1px solid black;
+	
+	background-color:#9bd9ff;
+	
+	font-size:1.1em;
+	
+	margin:10px 20px;
+	padding:5px;
+}
+main button:hover {
+	background-color:#50bdff;
 }
 
 /*Flex Rules*/
@@ -203,7 +228,7 @@ main #game{
 //  Footer   //
 /////////////*/
 footer {
-	background-color:#50bdff;
+	background-color:#9bd9ff;
 	
 	color:black;
 	font-size:.9em;
