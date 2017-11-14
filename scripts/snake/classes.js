@@ -3,6 +3,7 @@ class GameArea {
 		this.container = container;
 		this.width = width;
 		this.height = height;
+		this.color = 'white';
 
 		this.grid = this.displayAndGetGrid();
 	}
@@ -52,13 +53,15 @@ class GameArea {
 		
 		//rows
 		row.css({
+			'background-color': this.color,
+			
 			'border':'1px solid black',
 			
 			'height': boxWidth,
 			'width': 'inherit'		
 		});
 	}
-	
+		
 	getGrid() {
 		var grid = [];
 		
@@ -72,7 +75,12 @@ class GameArea {
 		return grid;
 	}
 	
-	//TODO
+	clearGrid() {
+		$('.row-box').css({
+			'background-color': this.color
+		});
+	}
+	
 	getRandomCoords(){
 		var randX = Math.floor(Math.random() * (this.width - 1));
 		var randY = Math.floor(Math.random() * (this.height - 1));
@@ -86,86 +94,87 @@ class GameArea {
 	}
 };
 
+
 class Snake {
 	constructor(coords, grid) {
 		this.coords = [coords];
+		this.direction = '';
 		this.snakeLength = 5;
+		this.color = 'green';
 		
-		this.displaySnake(grid)
+		this.displaySnake(grid);
 	}
 	
 	displaySnake(grid) {
 		for(var i = 0; i < this.coords.length; i++) {
 			$(grid[this.coords[i].x][this.coords[i].y]).css({
-				'background-color': 'green'
+				'background-color': this.color
 			});
 		}
-	}
+	}	
 	
-	//TODO	
-	upDateCoords(newX, newY) {
-		//if snake is max length remove end of snake
-		if(!this.coords.length < this.snakeLength) {
-			this.coords = this.coords.slice(0, this.snakeLength -1)
-		}
+	updateCoords(newX, newY) {
+		var newCoords = {'x': newX, 'y': newY};
+		console.log(newCoords);
 		
-		this.coords.unshift([this.newX, this.newY]);
+		if(this.checkCollisions(newCoords)) {
+			//if snake is max length remove end of snake
+			if(!this.coords.length < this.snakeLength) {
+				this.coords = this.coords.slice(0, this.snakeLength -1)
+			}
+			
+			this.coords.unshift(newCoords);
+		}
+	}	
+	
+	updateAndDisplayLocation(grid) {
+		this.move();
+		this.displaySnake(grid);
 	}
 	
-	//TODO
-	move(direction) {
-		switch(direction) {
+	move() {
+		switch(this.direction) {
 			case 'up':
-				updateCoords(this.coords[0].x, this.coords[0].y - 1)
+				this.updateCoords(this.coords[0].x, this.coords[0].y - 1)
 				break;
 				
 			case 'down':
-				updateCoords(this.coords[0].x, this.coords[0].y + 1)
+				this.updateCoords(this.coords[0].x, this.coords[0].y + 1)
 				break;
 				
 			case 'left':
-				updateCoords(this.coords[0].x - 1, this.coords[0].y)
+				this.updateCoords(this.coords[0].x - 1, this.coords[0].y)
 				break;
 				
 			case 'right':
-				updateCoords(this.coords[0].x + 1, this.coords[0].y)
+				this.updateCoords(this.coords[0].x + 1, this.coords[0].y)
 				break;
-		}
-		
-		displaySnake();
+		}		
 	}
 	
 	grow() {
 		this.length += 1
 	}
 	
-	//TODO
-	checkCollisions() {
-		
+	//Returns true if there are no bad collisions
+	checkCollisions(newCoords) {
+		console.log(this.coords.includes(newCoords));
+		console.log(this.checkCollidesWithWall());
+		//check if snake collides with itself
+		if(this.coords.includes(newCoords)) return false;
+		else if(this.checkCollidesWithWall()) return false;
+		else return true;
 	}
-};
-
-function main() {	
-	var gameArea = new GameArea($('#game'), 25, 15);
-	var snake = new Snake(gameArea.getRandomCoords(), gameArea.grid);
-}
-
-function initGame(c) {
 	
-}
-
-
-
-
-//style a box occupied by the snake
-function setSnakeStyle(snakeBox) {
-	console.log(snakeBox);
-	snakeBox.css({
-		'backgroundColor': 'green'	
-	});
-}
-
-
-
-
-$(function(){main()});
+	//returns true if colliding with a wall
+	checkCollidesWithWall() {		
+		var maxX = gameArea.width - 1;
+		var maxY = gameArea.height - 1;
+		console.log(this.coords[0].x, this.coords[0].y);
+		
+		if(0 > this.coords[0].x > maxX) return true
+		else if(0 > this.coords[0].y > maxY) return true
+		else return false;
+	}
+	
+};
