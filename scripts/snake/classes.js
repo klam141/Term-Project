@@ -158,22 +158,21 @@ class Snake {
 	
 	//Returns true if there are no bad collisions
 	checkCollisions(newCoords) {
-		console.log(this.coords.includes(newCoords));
-		console.log(this.checkCollidesWithWall());
+		console.log(newCoords);
+		console.log(this.checkCollidesWithWall(newCoords));
 		//check if snake collides with itself
 		if(this.coords.includes(newCoords)) return false;
-		else if(this.checkCollidesWithWall()) return false;
+		else if(this.checkCollidesWithWall(newCoords)) return false;
 		else return true;
 	}
 	
 	//returns true if colliding with a wall
-	checkCollidesWithWall() {		
+	checkCollidesWithWall(newCoords) {		
 		var maxX = gameArea.width - 1;
 		var maxY = gameArea.height - 1;
-		console.log(this.coords[0].x, this.coords[0].y);
+		console.log(newCoords);
 		
-		if(0 > this.coords[0].x > maxX) return true
-		else if(0 > this.coords[0].y > maxY) return true
+		if((0 > newCoords.x > maxX) | (0 > newCoords.y > maxY)) return true
 		else return false;
 	}
 	
