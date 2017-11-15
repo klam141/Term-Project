@@ -3,6 +3,8 @@ var snake;
 
 function main() {
 	initGame();
+	
+	initGameLoop()	
 }
 
 function initGame() {
@@ -10,41 +12,79 @@ function initGame() {
 	gameWidth = 25;
 	gameHeight = 15;
 	
+	snakeLength = 10;
+	
 	gameArea = new GameArea(gameContainer, gameWidth, gameHeight);
-	snake = new Snake(gameArea.getRandomCoords(), gameArea.grid);
+	snake = new Snake(gameArea.getRandomCoords(), snakeLength);
+	
+	gameArea.displayGridItem(snake.coords, snake.color);
+	
+	//set the game to be active right away
+	gameContainer.focus();
 	
 	setMoveKeys();
 }
 
-function setMoveKeys() {
-	
+function setMoveKeys() {	
 	$(gameArea.container).on('keydown', function(e) {		
-		e.preventDefault(); //stop keyboard scrolling
+		if(e.keyCode != 116) e.preventDefault(); //stop keyboard scrolling
+		
+		var prevDirection = snake.direction;
+		var newDirection;
 		
 		switch(e.keyCode) {
 			case 38: //up arrow
 			case 87: //w
-				snake.direction = 'up';
+				if(prevDirection != 'down') newDirection = 'up';
 				break;
 				
 			case 40: //down arrow
 			case 83: //s
-				snake.direction = 'down';
+				if(prevDirection != 'up') newDirection = 'down';
 				break;
 				
 			case 37: //left arrow
 			case 65: //a
-				snake.direction = 'left';
+				if(prevDirection != 'right') newDirection = 'left';
 				break;
 				
 			case 39: //right arrow
 			case 68: //d
-				snake.direction = 'right';
+				if(prevDirection != 'left') newDirection = 'right';
 				break;
 		}
-		gameArea.clearGrid();
-		snake.updateAndDisplayLocation(gameArea.grid);
+		
+		//prevent turning around too quickly
+		snake.direction = newDirection;
 	});
+}
+
+function initGameLoop() {
+	var gameLoop = setInterval(function() {manageGameLoop(gameLoop)}, 100);
+}
+
+function manageGameLoop(g) {
+	
+	
+	//wait for a direction to be pressed
+	if(snake.direction != '') {
+		//clear the grid every frame
+		gameArea.clearGrid();
+		
+		
+		
+		var newCoords = snake.getNewCoords();
+		
+		if(snake.checkCollisions(gameArea.grid, newCoords)) {
+			snake.updateCoords(newCoords);
+			
+		}
+		else {
+			clearInterval(g); //stops on a bad collision
+		}
+			
+		gameArea.displayGridItem(snake.coords, snake.color);
+	}
 }
 
 
