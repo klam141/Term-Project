@@ -281,12 +281,10 @@ class Snake {
 			case 'right':
 				if(this.direction != 'left') this.direction = this.newDirections[0];
 				break;
-				
-				break;
 		}
 		
 		//remove first direction from queue 
-		this.newDirections.shift();
+		this.newDirections = []
 	}
 	
 	getNewCoords() {
