@@ -1,5 +1,5 @@
 /*  Colors:
-Orange:     #ff9428
+Orange:     #efa85f
 Sky-Blue:   #9bd9ff
 Blue:       #50bdff
 Light-Grey: #dbdbdb
@@ -81,7 +81,7 @@ header{
 		0 -1px black
 	;
 	
-	color:#ff9428;
+	color:#efa85f;
 	
 	text-align:center;
 }
@@ -99,7 +99,7 @@ header{
 //  Nav      //
 /////////////*/
 nav {
-	background-color:#ff9428;
+	background-color:#efa85f;
 	
 	padding:0;
 }
