@@ -28,6 +28,9 @@ class GameArea {
 				$('.col-' + i).append('<div class="row-box row-' + j + '"></div>');
 			}
 		}
+		
+		//give all boxes data
+		$('.row-box').data('occupied', false);
 	}
 	
 	styleGrid() {
@@ -79,27 +82,50 @@ class GameArea {
 		$('.row-box').css({
 			'background-color': this.color
 		});
+		
+		$('row-box').data('occupied', false);
 	}
 	
-	getRandomCoords(){
-		var randX = Math.floor(Math.random() * (this.width - 1));
-		var randY = Math.floor(Math.random() * (this.height - 1));
-		
-		var coords = {
+	//gets a random set of coordinates that arent already occupied
+	getRandomCoords(){			
+		do {
+			var randX = Math.floor(Math.random() * (this.width));
+			var randY = Math.floor(Math.random() * (this.height));
+			
+			var coords = {
 			'x': randX,
 			'y': randY
-		}
+			}
+			
+			//if the area is not empty is isnt valid
+		} while (!this.checkEmptyGridItem(this.getGridItem(coords)));
+		
+		
 		
 		return coords;
 	}
 	
+	getGridItem(coords) {
+		return this.grid[coords.x][coords.y];
+	}
+	
+	//if item is occupied returns false
+	checkEmptyGridItem(gridItem) {
+		
+		if($(gridItem).data().occupied) return false;
+		else return true;
+		
+	}
+	
 	displayGridItem(coords, color) {
-		for(var i = 0; i < coords.length; i++) {
-			var currentBox = this.grid[coords[i].x][coords[i].y];
-			$(currentBox).css({
-				'background-color': color
-			});
-		}
+		var gridItem = this.getGridItem(coords);
+		
+		$(gridItem).css({
+			'background-color': color
+		});
+		
+		//set grid item as occupied
+		$(gridItem).data('occupied', true);
 	}
 };
 
@@ -107,7 +133,10 @@ class GameArea {
 class Snake {
 	constructor(coords, length) {
 		this.coords = [coords];
+		
 		this.direction = '';
+		this.newDirections = [];
+		
 		this.snakeLength = length;
 		this.color = 'black';		
 	}
@@ -118,6 +147,32 @@ class Snake {
 		}
 		
 		this.coords.unshift(newCoords);
+	}
+	
+	updateDirection() {
+		switch(this.newDirections[0]) {
+			//prevent turning straight around
+			case 'up':
+				if(this.direction != 'down') this.direction = this.newDirections[0];
+				break;
+			
+			case 'down':
+				if(this.direction != 'up') this.direction = this.newDirections[0];
+				break;
+			
+			
+			case 'left':
+				if(this.direction != 'right') this.direction = this.newDirections[0];
+				break;
+			
+			
+			case 'right':
+				if(this.direction != 'left') this.direction = this.newDirections[0];
+				break;			
+		}
+		
+		//remove first direction from queue 
+		this.newDirections.shift();
 	}
 	
 	getNewCoords() {
@@ -156,21 +211,22 @@ class Snake {
 				}
 				
 				break;
-		}	
-		
-		if(new)
+		}
 		
 		return newCoords;
 	}
 	
-	grow() {
-		this.length += 1
+	updateLength() {
+		this.snakeLength += 1
 	}
 	
-	//Returns true if there are no bad collisions
-	checkCollisions(grid, newCoords) {
-		if(this.checkCollidesWithSelf(newCoords) | this.checkCollidesWithWall(grid, newCoords)) return false;
-		else return true;
+	//Returns 0 if there are no bad collisions
+	//Returns 1 if colliding with food
+	//Returns 2 if colliding with self/wall
+	checkCollisions(grid, foodCoords, newCoords) {
+		if(this.checkCollidesWithSelf(newCoords) | this.checkCollidesWithWall(grid, newCoords)) return 2;
+		else if(this.checkCollidesWithFood(foodCoords, newCoords)) return 1;
+		else return 0;
 	}
 	
 	//returns true if colliding with self
@@ -183,12 +239,30 @@ class Snake {
 	}
 	
 	//returns true if colliding with a wall
-	checkCollidesWithWall(grid, newCoords) {		
+	checkCollidesWithWall(grid, newCoords) {
 		var maxX = grid.length - 1;
 		var maxY = grid[0].length - 1;
 		
 		if(0 > newCoords.x | newCoords.x > maxX | 0 > newCoords.y | newCoords.y > maxY) return true
 		else return false;
+	}
+	
+	//returns true if colliding with food
+	checkCollidesWithFood(foodCoords, newCoords) {
+		if(newCoords.x == foodCoords.x & newCoords.y == foodCoords.y) return true;
+		else return false;
+	}
+	
+};
+
+class Food {
+	constructor(coords) {
+		this.coords = coords;
+		this.color = 'yellow';		
+	}
+	
+	getNewCoords(coords) {
+		
 	}
 	
 };

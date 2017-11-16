@@ -1,10 +1,11 @@
 var gameArea;
 var snake;
+var food;
 
 function main() {
 	initGame();
 	
-	initGameLoop()	
+	initGameLoop(100);	
 }
 
 function initGame() {
@@ -16,8 +17,10 @@ function initGame() {
 	
 	gameArea = new GameArea(gameContainer, gameWidth, gameHeight);
 	snake = new Snake(gameArea.getRandomCoords(), snakeLength);
+	displaySnake();
 	
-	gameArea.displayGridItem(snake.coords, snake.color);
+	food = new Food(gameArea.getRandomCoords());
+	displayFood();
 	
 	//set the game to be active right away
 	gameContainer.focus();
@@ -29,61 +32,92 @@ function setMoveKeys() {
 	$(gameArea.container).on('keydown', function(e) {		
 		if(e.keyCode != 116) e.preventDefault(); //stop keyboard scrolling
 		
-		var prevDirection = snake.direction;
 		var newDirection;
 		
 		switch(e.keyCode) {
 			case 38: //up arrow
 			case 87: //w
-				if(prevDirection != 'down') newDirection = 'up';
+				newDirection = 'up';
 				break;
 				
 			case 40: //down arrow
 			case 83: //s
-				if(prevDirection != 'up') newDirection = 'down';
+				newDirection = 'down';
 				break;
 				
 			case 37: //left arrow
 			case 65: //a
-				if(prevDirection != 'right') newDirection = 'left';
+				 newDirection = 'left';
 				break;
 				
 			case 39: //right arrow
 			case 68: //d
-				if(prevDirection != 'left') newDirection = 'right';
+				newDirection = 'right';
 				break;
 		}
 		
-		//prevent turning around too quickly
-		snake.direction = newDirection;
+		//store data for later use
+		snake.newDirections.push(newDirection);	
 	});
 }
 
-function initGameLoop() {
-	var gameLoop = setInterval(function() {manageGameLoop(gameLoop)}, 100);
+function initGameLoop(interval) {
+	var gameLoop = setInterval(function() {manageGameLoop(gameLoop)}, interval);
 }
 
 function manageGameLoop(g) {
 	
+	//update direction
+	snake.updateDirection();
 	
 	//wait for a direction to be pressed
 	if(snake.direction != '') {
 		//clear the grid every frame
 		gameArea.clearGrid();
-		
-		
-		
+				
 		var newCoords = snake.getNewCoords();
 		
-		if(snake.checkCollisions(gameArea.grid, newCoords)) {
-			snake.updateCoords(newCoords);
+		//stop if bad collision
+		if(checkCollisions(newCoords)) snake.updateCoords(newCoords);
+		else clearInterval(g);
+		
+		displaySnake();
+		displayFood();
+		
+	}
+}
+
+function displaySnake() {
+	for(var i = 0; i < snake.coords.length; i++) {
+		gameArea.displayGridItem(snake.coords[i], snake.color);
+	}
+}
+
+function displayFood() {
+	gameArea.displayGridItem(food.coords, food.color);
+}
+
+function growSnake() {
+	snake.updateLength();
+	
+	food.coords = gameArea.getRandomCoords();
+}
+
+//returns false if bad collision
+function checkCollisions(newCoords) {
+	switch(snake.checkCollisions(gameArea.grid, food.coords, newCoords)) {
+		case 0:
+			return true;
+			break;
 			
-		}
-		else {
-			clearInterval(g); //stops on a bad collision
-		}
+		case 1: //if you eat food gain length and move the food				
+			growSnake()				
+			return true;
+			break;
 			
-		gameArea.displayGridItem(snake.coords, snake.color);
+		case 2:
+		return false;
+			break;		
 	}
 }
 
