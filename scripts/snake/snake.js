@@ -92,7 +92,7 @@ function initGameLoop() {
 }
 
 function manageGameLoop() {
-	var frameId = setTimeout(function() {requestAnimationFrame(manageGameLoop)}, 100);
+	var frameId = setTimeout(function() {requestAnimationFrame(manageGameLoop)}, 90);
 	
 	snake.updateDirection();
 	
