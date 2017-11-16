@@ -218,7 +218,12 @@ class Grid {
 	}
 	
 	getGridItem(coords) {
-		return this.body[coords.x][coords.y];
+		if(this.body[coords.x] == null || this.body[coords.x][coords.y] == null) return false		
+		else return this.body[coords.x][coords.y];
+	}
+	
+	emptyGridItem(coords) {
+		$(this.getGridItem(coords)).data('occupied', false);
 	}
 	
 	//if item is occupied returns false
@@ -229,7 +234,7 @@ class Grid {
 		
 	}
 	
-	displayGridItem(coords, color) {
+	displayGridItem(coords, color, name) {
 		var gridItem = this.getGridItem(coords);
 		
 		$(gridItem).css({
@@ -237,7 +242,7 @@ class Grid {
 		});
 		
 		//set grid item as occupied
-		$(gridItem).data('occupied', true);
+		$(gridItem).data('occupied', name);
 	}
 };
 
@@ -252,9 +257,14 @@ class Snake {
 		this.color = 'black';		
 	}
 	
-	updateCoords(newCoords) {
+	updateCoords(grid, newCoords) {
+		//leave grid items when your tail no longer occupies them
+		var currentTail = this.coords[snake.snakeLength - 1];
+		if(currentTail != null) grid.emptyGridItem(currentTail);
+		
+		
 		if(!this.coords.length < this.snakeLength) {
-			this.coords = this.coords.slice(0, this.snakeLength -1)
+			this.coords = this.coords.slice(0, this.snakeLength -1);
 		}
 		
 		this.coords.unshift(newCoords);
@@ -318,33 +328,32 @@ class Snake {
 	//Returns 0 if there are no bad collisions
 	//Returns 1 if colliding with food
 	//Returns 2 if colliding with self/wall
-	checkCollisions(grid, foodCoords, newCoords) {
-		if(this.checkCollidesWithSelf(newCoords) || this.checkCollidesWithWall(grid, newCoords)) return 2;
-		else if(this.checkCollidesWithFood(foodCoords, newCoords)) return 1;
-		else return 0;
+	checkCollisions(grid, newCoords) {
+		var targetGridItem = grid.getGridItem(newCoords);
+		
+		if(this.checkCollidesWithWall(targetGridItem)) return 2;
+		else {
+			if(this.checkCollidesWithSelf(targetGridItem)) return 2;
+			else if(this.checkCollidesWithFood(targetGridItem)) return 1;
+			else return 0;
+		}
 	}
 	
 	//returns true if colliding with self
-	checkCollidesWithSelf(newCoords) {
-		//check each coordinate in the snake and compare with the new coords
-		for(var i = 0; i < this.coords.length; i++) {
-			if(this.coords[i].x == newCoords.x && this.coords[i].y == newCoords.y) return true
-		}		
-		return false;
+	checkCollidesWithSelf(targetGridItem) {
+		if($(targetGridItem).data().occupied == 'snake') return true;
+		else return false;
 	}
 	
 	//returns true if colliding with a wall
-	checkCollidesWithWall(grid, newCoords) {
-		var maxX = grid.length - 1;
-		var maxY = grid[0].length - 1;
-		
-		if(0 > newCoords.x || newCoords.x > maxX || 0 > newCoords.y || newCoords.y > maxY) return true
+	checkCollidesWithWall(targetGridItem) {
+		if(targetGridItem == false) return true;
 		else return false;
 	}
 	
 	//returns true if colliding with food
-	checkCollidesWithFood(foodCoords, newCoords) {
-		if(newCoords.x == foodCoords.x && newCoords.y == foodCoords.y) return true;
+	checkCollidesWithFood(targetGridItem) {
+		if($(targetGridItem).data().occupied == 'food') return true;
 		else return false;
 	}
 	

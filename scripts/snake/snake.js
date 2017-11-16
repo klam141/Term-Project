@@ -3,11 +3,7 @@ var snake;
 var food;
 
 function main() {
-	initGame();
-	
-	//initRound();
-	
-	//initGameLoop(100);	
+	initGame();	
 }
 
 function initGame() {	
@@ -19,11 +15,14 @@ function initGame() {
 	
 	gameArea.displaySplashScreen();
 	
-	setButtonEvent();
+	setEvents();
 };
 
 function initRound() {
-	gameArea.grid.clear();
+	//make a new grid each game
+	gameArea.clear();
+	gameArea.grid.body = gameArea.grid.displayAndGetGrid();
+	
 	gameArea.removeOverlay();
 	
 	snakeLength = 10;
@@ -41,7 +40,12 @@ function initRound() {
 	initGameLoop();
 }
 
-function setButtonEvent() {
+function setEvents() {
+	setButtonEvents();
+	setMoveKeys();
+}
+
+function setButtonEvents() {
 	$(gameArea.grid.container).on('click', '#gameButton', initRound);
 	
 	
@@ -107,7 +111,7 @@ function manageGameLoop() {
 		displayFood();
 		
 		if(checkCollisions(newCoords)) {
-			snake.updateCoords(newCoords);
+			snake.updateCoords(gameArea.grid, newCoords);
 		}
 		//stop if bad collision
 		else {
@@ -120,12 +124,12 @@ function manageGameLoop() {
 
 function displaySnake() {
 	for(var i = 0; i < snake.coords.length; i++) {
-		gameArea.grid.displayGridItem(snake.coords[i], snake.color);
+		gameArea.grid.displayGridItem(snake.coords[i], snake.color, 'snake');
 	}
 }
 
 function displayFood() {
-	gameArea.grid.displayGridItem(food.coords, food.color);
+	gameArea.grid.displayGridItem(food.coords, food.color, 'food');
 }
 
 function growSnake() {
@@ -136,7 +140,7 @@ function growSnake() {
 
 //returns false if bad collision
 function checkCollisions(newCoords) {
-	switch(snake.checkCollisions(gameArea.grid.body, food.coords, newCoords)) {
+	switch(snake.checkCollisions(gameArea.grid, newCoords)) {
 		case 0:
 			return true;
 			break;
