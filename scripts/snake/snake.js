@@ -38,7 +38,7 @@ function initRound() {
 	
 	setMoveKeys();
 	
-	initGameLoop(100);
+	initGameLoop();
 }
 
 function setButtonEvent() {
@@ -78,13 +78,17 @@ function setMoveKeys() {
 	});
 }
 
-function initGameLoop(interval) {
-	var gameLoop = setInterval(function() {manageGameLoop(gameLoop)}, interval);
+function initGameLoop() {
+	requestAnimationFrame(manageGameLoop);
 }
 
-function manageGameLoop(g) {
+function iterateGameLoop() {
+	return requestAnimationFrame(manageGameLoop);
+}
+
+function manageGameLoop() {
+	var frameId = iterateGameLoop();
 	
-	//update direction
 	snake.updateDirection();
 	
 	//wait for a direction to be pressed
@@ -94,20 +98,19 @@ function manageGameLoop(g) {
 				
 		var newCoords = snake.getNewCoords();
 		
-		//stop if bad collision
-		if(checkCollisions(newCoords)) snake.updateCoords(newCoords);
-		else {
-			var score = gameArea.checkGameAreaFilled();
-			
-			displayScoreScreen(score, gameArea.checkGameAreaFull(score));
-			
-			clearInterval(g);		
-		};
-		
 		displaySnake();
 		displayFood();
 		
-	}
+		if(checkCollisions(newCoords)) {
+			snake.updateCoords(newCoords);
+		}
+		//stop if bad collision
+		else {
+			var score = snake.coords.length;
+			displayScoreScreen(score, gameArea.checkGameAreaFull(score));
+			window.cancelAnimationFrame(frameId);
+		}	
+	}	
 }
 
 function displaySnake() {

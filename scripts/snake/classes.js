@@ -30,7 +30,7 @@ class GameArea {
 		
 		
 		if(gameWon) outputText += '<h1>You Win</h1>';
-		else outputText += '<p>Score: ' + (score - 1) + '</p>';
+		else outputText += '<p>Score: ' + (score) + '</p>';
 		
 		outputText += '<button id="gameButton">Play Again</button></div>'
 		
@@ -82,7 +82,7 @@ class GameArea {
 	}
 	
 	checkGameAreaFilled() {
-		var gameItemsFilled = 0;	
+		var gameItemsFilled = 0;
 		
 		//count filled items
 		for(var i = 0; i < this.grid.body.length; i++){
@@ -200,8 +200,6 @@ class Grid {
 		$('.row-box').css({
 			'background-color': this.color
 		});
-		
-		$('row-box').data('occupied', false);
 	}
 	
 	//gets a random set of coordinates that arent already occupied
@@ -263,7 +261,7 @@ class Snake {
 		this.coords.unshift(newCoords);
 	}
 	
-	updateDirection() {
+	updateDirection() {		
 		switch(this.newDirections[0]) {
 			//prevent turning straight around
 			case 'up':
@@ -282,7 +280,9 @@ class Snake {
 			
 			case 'right':
 				if(this.direction != 'left') this.direction = this.newDirections[0];
-				break;			
+				break;
+				
+				break;
 		}
 		
 		//remove first direction from queue 
@@ -322,7 +322,7 @@ class Snake {
 	//Returns 1 if colliding with food
 	//Returns 2 if colliding with self/wall
 	checkCollisions(grid, foodCoords, newCoords) {
-		if(this.checkCollidesWithSelf(newCoords) | this.checkCollidesWithWall(grid, newCoords)) return 2;
+		if(this.checkCollidesWithSelf(newCoords) || this.checkCollidesWithWall(grid, newCoords)) return 2;
 		else if(this.checkCollidesWithFood(foodCoords, newCoords)) return 1;
 		else return 0;
 	}
@@ -331,7 +331,7 @@ class Snake {
 	checkCollidesWithSelf(newCoords) {
 		//check each coordinate in the snake and compare with the new coords
 		for(var i = 0; i < this.coords.length; i++) {
-			if(this.coords[i].x == newCoords.x & this.coords[i].y == newCoords.y) return true
+			if(this.coords[i].x == newCoords.x && this.coords[i].y == newCoords.y) return true
 		}		
 		return false;
 	}
@@ -341,13 +341,13 @@ class Snake {
 		var maxX = grid.length - 1;
 		var maxY = grid[0].length - 1;
 		
-		if(0 > newCoords.x | newCoords.x > maxX | 0 > newCoords.y | newCoords.y > maxY) return true
+		if(0 > newCoords.x || newCoords.x > maxX || 0 > newCoords.y || newCoords.y > maxY) return true
 		else return false;
 	}
 	
 	//returns true if colliding with food
 	checkCollidesWithFood(foodCoords, newCoords) {
-		if(newCoords.x == foodCoords.x & newCoords.y == foodCoords.y) return true;
+		if(newCoords.x == foodCoords.x && newCoords.y == foodCoords.y) return true;
 		else return false;
 	}
 	
