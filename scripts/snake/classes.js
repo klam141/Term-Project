@@ -1,11 +1,126 @@
+class Coordinates {
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
+	}
+};
+
 class GameArea {
+	constructor(container, width, height) {
+		this.container = container;
+		
+		this.clear();
+		
+		this.grid = new Grid(container, width, height);
+	}
+	
+	displaySplashScreen() {	
+		this.grid.container.append(
+			'<div id="overlay">' +
+			'<h1>Snake</h1>' +
+			'<button id="gameButton">Play</button>' +
+			'</div>'
+		);
+		
+		this.styleOverlay();
+	}
+	
+	displayGameOver(score, gameWon) {
+		var outputText = '<div id="overlay">'
+		
+		
+		if(gameWon) outputText += '<h1>You Win</h1>';
+		else outputText += '<p>Score: ' + (score - 1) + '</p>';
+		
+		outputText += '<button id="gameButton">Play Again</button></div>'
+		
+		this.grid.container.append(outputText);
+		
+		this.styleOverlay();
+		
+		//fade in
+		$('#overlay').toggle();
+		$('#overlay').toggle(200);
+	}
+	
+	styleOverlay() {
+		$('#overlay').css({
+			'background-color': 'rgba(0,0,0,0.75)',
+
+			'color': 'white',
+			'font-size': '100px',
+			'line-height': '80%',
+			
+			'display': 'block',
+			'position': 'absolute',
+			'top': '0',
+			'left': '0',
+			'bottom': '0',
+			'right': '0',
+			'z-index': '2',
+			
+			'width': '100%',
+			'height': '100%',
+			
+			'user-select': 'none'
+		});
+		
+		$('#overlay button').css({
+			'background-color': 'black',
+			
+			'color': 'white',
+			
+			'font-size': '50px',
+			
+			'padding': '20px',
+			'margin': '0'
+		});
+	}
+	
+	removeOverlay() {
+		$('#overlay').remove();
+	}
+	
+	checkGameAreaFilled() {
+		var gameItemsFilled = 0;	
+		
+		//count filled items
+		for(var i = 0; i < this.grid.body.length; i++){
+			for(var j = 0; j < this.grid.body[i].length; j++) {
+				if($(this.grid.body[i][j]).data().occupied == true) gameItemsFilled ++
+			}
+		}
+		
+		return gameItemsFilled;
+	}
+	
+	checkGameAreaFull(qty) {
+		var totalGameItems = this.height * this.width;
+		
+		if (qty == totalGameItems) return true
+		else if( qty > totalGameItems) {//Just in case
+			console.log('You have filled more of the game than there are squares.')
+			return false
+		}
+		else return false
+	}
+	
+	clear() {
+		this.container.html('');
+	}
+};
+
+class Grid {
 	constructor(container, width, height) {
 		this.container = container;
 		this.width = width;
 		this.height = height;
+		
+		this.boxWidth = 25;
 		this.color = 'green';
-
-		this.grid = this.displayAndGetGrid();
+		
+		
+		this.body = this.displayAndGetGrid();
 	}
 	
 	displayAndGetGrid() {
@@ -17,7 +132,7 @@ class GameArea {
 	}
 	
 	initGrid() {
-		this.container.html('');//empties the container
+		this.container.html(''); //clear the game area
 		
 		for(var i = 0; i < this.width; i++) {
 			//create rows
@@ -34,7 +149,7 @@ class GameArea {
 	}
 	
 	styleGrid() {
-		var boxWidth = '25px';
+		var boxWidth = this.boxWidth + 'px';
 	
 		var row = $('.row-box');
 		var col = $('.col-box');
@@ -43,7 +158,10 @@ class GameArea {
 		this.container.css({
 			'font-size': '0',
 			
-			'padding': '0'	
+			'padding': '0',
+
+			'height': (this.boxWidth * this.height) + 20 + 'px',
+			'width': (this.boxWidth * this.width) + 20 + 'px'
 		});
 		
 		//organize boxes;
@@ -56,7 +174,7 @@ class GameArea {
 		
 		//rows
 		row.css({
-			'background-color': this.color,
+			'background-color': 'green',
 			
 			'border':'1px solid black',
 			
@@ -64,7 +182,7 @@ class GameArea {
 			'width': 'inherit'		
 		});
 	}
-		
+	
 	getGrid() {
 		var grid = [];
 		
@@ -78,7 +196,7 @@ class GameArea {
 		return grid;
 	}
 	
-	clearGrid() {
+	clear() {
 		$('.row-box').css({
 			'background-color': this.color
 		});
@@ -92,10 +210,7 @@ class GameArea {
 			var randX = Math.floor(Math.random() * (this.width));
 			var randY = Math.floor(Math.random() * (this.height));
 			
-			var coords = {
-			'x': randX,
-			'y': randY
-			}
+			var coords = new Coordinates(randX, randY);
 			
 			//if the area is not empty is isnt valid
 		} while (!this.checkEmptyGridItem(this.getGridItem(coords)));
@@ -106,7 +221,7 @@ class GameArea {
 	}
 	
 	getGridItem(coords) {
-		return this.grid[coords.x][coords.y];
+		return this.body[coords.x][coords.y];
 	}
 	
 	//if item is occupied returns false
@@ -128,7 +243,6 @@ class GameArea {
 		$(gridItem).data('occupied', true);
 	}
 };
-
 
 class Snake {
 	constructor(coords, length) {
@@ -181,35 +295,19 @@ class Snake {
 			
 		switch(this.direction) {
 			case 'up':
-				newCoords = {
-					'x': this.coords[0].x, 
-					'y': this.coords[0].y - 1
-				}
-				
+				newCoords = new Coordinates(this.coords[0].x, this.coords[0].y - 1);				
 				break;
 				
 			case 'down':
-				newCoords = {
-					'x': this.coords[0].x, 
-					'y': this.coords[0].y + 1
-				}
-				
+				newCoords = new Coordinates(this.coords[0].x, this.coords[0].y + 1);
 				break;
 				
 			case 'left':
-				newCoords = {
-					'x': this.coords[0].x - 1,
-					'y': this.coords[0].y
-				}
-				
+				newCoords = new Coordinates(this.coords[0].x -1, this.coords[0].y);
 				break;
 				
 			case 'right':
-				newCoords = {
-					'x': this.coords[0].x + 1,
-					'y': this.coords[0].y
-				}
-				
+				newCoords = new Coordinates(this.coords[0].x + 1, this.coords[0].y);
 				break;
 		}
 		
@@ -259,10 +357,5 @@ class Food {
 	constructor(coords) {
 		this.coords = coords;
 		this.color = 'yellow';		
-	}
-	
-	getNewCoords(coords) {
-		
-	}
-	
+	}	
 };

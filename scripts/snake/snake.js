@@ -5,31 +5,48 @@ var food;
 function main() {
 	initGame();
 	
-	initGameLoop(100);	
+	//initRound();
+	
+	//initGameLoop(100);	
 }
 
-function initGame() {
+function initGame() {	
 	gameContainer = $('#game');
 	gameWidth = 25;
 	gameHeight = 15;
 	
-	snakeLength = 10;
-	
 	gameArea = new GameArea(gameContainer, gameWidth, gameHeight);
-	snake = new Snake(gameArea.getRandomCoords(), snakeLength);
+	
+	gameArea.displaySplashScreen();
+	
+	setButtonEvent();
+};
+
+function initRound() {
+	gameArea.grid.clear();
+	gameArea.removeOverlay();
+	
+	snakeLength = 10;
+	snake = new Snake(gameArea.grid.getRandomCoords(), snakeLength);
 	displaySnake();
 	
-	food = new Food(gameArea.getRandomCoords());
+	food = new Food(gameArea.grid.getRandomCoords());
 	displayFood();
 	
 	//set the game to be active right away
-	gameContainer.focus();
+	gameArea.grid.container.focus();
 	
 	setMoveKeys();
+	
+	initGameLoop(100);
 }
 
-function setMoveKeys() {	
-	$(gameArea.container).on('keydown', function(e) {		
+function setButtonEvent() {
+	$(gameArea.grid.container).on('click', '#gameButton', initRound);
+}
+
+function setMoveKeys() {
+	$(gameArea.grid.container).on('keydown', function(e) {
 		if(e.keyCode != 116) e.preventDefault(); //stop keyboard scrolling
 		
 		var newDirection;
@@ -73,13 +90,19 @@ function manageGameLoop(g) {
 	//wait for a direction to be pressed
 	if(snake.direction != '') {
 		//clear the grid every frame
-		gameArea.clearGrid();
+		gameArea.grid.clear();
 				
 		var newCoords = snake.getNewCoords();
 		
 		//stop if bad collision
 		if(checkCollisions(newCoords)) snake.updateCoords(newCoords);
-		else clearInterval(g);
+		else {
+			var score = gameArea.checkGameAreaFilled();
+			
+			displayScoreScreen(score, gameArea.checkGameAreaFull(score));
+			
+			clearInterval(g);		
+		};
 		
 		displaySnake();
 		displayFood();
@@ -89,23 +112,23 @@ function manageGameLoop(g) {
 
 function displaySnake() {
 	for(var i = 0; i < snake.coords.length; i++) {
-		gameArea.displayGridItem(snake.coords[i], snake.color);
+		gameArea.grid.displayGridItem(snake.coords[i], snake.color);
 	}
 }
 
 function displayFood() {
-	gameArea.displayGridItem(food.coords, food.color);
+	gameArea.grid.displayGridItem(food.coords, food.color);
 }
 
 function growSnake() {
 	snake.updateLength();
 	
-	food.coords = gameArea.getRandomCoords();
+	food.coords = gameArea.grid.getRandomCoords();
 }
 
 //returns false if bad collision
 function checkCollisions(newCoords) {
-	switch(snake.checkCollisions(gameArea.grid, food.coords, newCoords)) {
+	switch(snake.checkCollisions(gameArea.grid.body, food.coords, newCoords)) {
 		case 0:
 			return true;
 			break;
@@ -119,6 +142,10 @@ function checkCollisions(newCoords) {
 		return false;
 			break;		
 	}
+}
+
+function displayScoreScreen(score, gameWon) {
+	gameArea.displayGameOver(score, gameWon);
 }
 
 
