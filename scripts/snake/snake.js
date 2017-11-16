@@ -43,6 +43,15 @@ function initRound() {
 
 function setButtonEvent() {
 	$(gameArea.grid.container).on('click', '#gameButton', initRound);
+	
+	
+	$(gameArea.grid.container).on('keydown', function(e) {
+		if(e.keyCode == 13 | e.keyCode == 32) {
+			var click = $.Event('click');
+			$('#gameButton').trigger(click);
+		}
+	});
+	
 }
 
 function setMoveKeys() {
@@ -82,12 +91,8 @@ function initGameLoop() {
 	requestAnimationFrame(manageGameLoop);
 }
 
-function iterateGameLoop() {
-	return requestAnimationFrame(manageGameLoop);
-}
-
 function manageGameLoop() {
-	var frameId = iterateGameLoop();
+	var frameId = setTimeout(function() {requestAnimationFrame(manageGameLoop)}, 100);
 	
 	snake.updateDirection();
 	
@@ -108,7 +113,7 @@ function manageGameLoop() {
 		else {
 			var score = snake.coords.length;
 			displayScoreScreen(score, gameArea.checkGameAreaFull(score));
-			window.cancelAnimationFrame(frameId);
+			window.clearTimeout(frameId);
 		}	
 	}	
 }

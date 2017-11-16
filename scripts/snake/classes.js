@@ -210,7 +210,6 @@ class Grid {
 			
 			var coords = new Coordinates(randX, randY);
 			
-			//if the area is not empty is isnt valid
 		} while (!this.checkEmptyGridItem(this.getGridItem(coords)));
 		
 		
