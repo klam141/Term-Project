@@ -284,7 +284,7 @@ class Hangman {
 			'<div class="stickFigurePart right arm"></div>' +
 			'<div class="stickFigurePart left leg"></div>' +
 			'<div class="stickFigurePart right leg"></div>' +
-			'<div id="stickFigure">'
+			'</div>'
 		);
 	}
 	
@@ -434,7 +434,7 @@ class Hangman {
 		this.displayHangmanPart();
 		
 		//return true if guesses are still available
-		if(this.currentPart < 5) {
+		if(this.currentPart < $('#stickFigure > div').length - 1) {
 			this.currentPart++
 			return true;
 		}

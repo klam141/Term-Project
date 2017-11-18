@@ -16,6 +16,8 @@ function initGame() {
 	gameArea.displaySplashScreen();
 	
 	setEvents();
+	
+	gameArea.container.focus();
 }
 
 function initRound() {
@@ -36,33 +38,46 @@ function setEvents() {
 	setOverlayButtonEvent();
 	
 	setAlphabetEvents();
+	
+	setKeyboardEvents();
 }
 
 function setOverlayButtonEvent() {
-	$(gameArea.container).on('click', '#gameButton', initRound);		
-	
-	//trigger button with enter/space
-	$(gameArea.container).on('keydown', function(e) {
-		if(e.keyCode == 13 | e.keyCode == 32) {
-			e.preventDefault();
-			var click = $.Event('click');
-			$('#gameButton').trigger(click);
-		}
-	});
+	$(gameArea.container).on('click', '#gameButton', initRound);
 }
 
 function setAlphabetEvents() {
-	$(gameArea.container).on(
-		'click',
-		'.letterButton button',
-		function() {
-			//disable the button
-			$(this).prop('disabled', true);
-			$(this).css({'background-color': 'black'});
-			
-			checkLetter(this.name);
+	$(gameArea.container).on('click', '.letterButton button', function() {
+		//disable the button
+		$(this).prop('disabled', true);
+		$(this).css({'background-color': 'black'});
+		
+		checkLetter(this.name);
+	});	
+}
+
+function setKeyboardEvents() {
+	$(gameArea.container).on('keydown', function(e) {
+		//allow refresh while focused
+		if(e.keyCode != 116) e.preventDefault();
+		
+		//create a list of keys that work with the game
+		var key = e.keyCode;
+		var alphabet = 'abcdefghijklmnopqrstuvwxyz';
+		var alphabetKeys = {};		
+		for(var i = 0; i < alphabet.length; i++) {
+			alphabetKeys[i + 65] = alphabet[i];
 		}
-	);
+		
+		//allow playing with keyboard
+		if(alphabetKeys[key] != undefined) {
+			$('[name= "' + alphabetKeys[key] + '"]').trigger($.Event('click'));
+		}
+		//trigger overlay button with enter/space
+		else if(e.keyCode == 13 | e.keyCode == 32) {
+			$('#gameButton').trigger($.Event('click'));
+		}
+	});
 }
 
 
@@ -142,10 +157,16 @@ function styleAlphabet() {
 
 function checkLetter(letter) {
 	if(word.checkWordContainsLetter(letter)) {
-		if(word.checkAndDisplayWord(letter)) gameArea.displayGameOver(true);
+		if(word.checkAndDisplayWord(letter)) {
+			$('.letterButton button').prop('disabled', true);
+			gameArea.displayGameOver(true);
+		}
 	}
 	else {
-		if(!hangman.checkAndDisplayHangman()) gameArea.displayGameOver(false);
+		if(!hangman.checkAndDisplayHangman()) {			
+			$('.letterButton button').prop('disabled', true);
+			gameArea.displayGameOver(false);
+		}
 	}
 }
 
