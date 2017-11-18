@@ -44,18 +44,10 @@
 		<main>
 			<h2>Hangman</h2>
 			
-			<article>
-				<div id="game"><!--This box will be filled by javascript-->
+			<article class="center-parent full-width">
+				<div id="game" class="center-child" tabindex="1"><!--This box will be filled by javascript-->
 					Enable JavaScript to play this game
-					<div class="hangman">
-						<!--This box will hold images of the hangman-->						
-					</div>
-					<div class="word-box">
-						<!--This box will hold the letters of the current word-->
-					</div>
-					<div class="letter-box">
-						<!--This box will hold a box for each letter of the alphabet-->
-					</div>
+					<!--This will be procedurally filled with a 10x10 grid of divs-->
 				</div>
 			</article>
 			
@@ -80,6 +72,10 @@
 			<em>&copy; The Hi-Score Foundation 2017</em>
 		</footer>
 	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="scripts/hangman/classes.js"></script>
+	<script src="scripts/hangman/hangman.js"></script>
 
 </body>
 </html>
