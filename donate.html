@@ -43,6 +43,132 @@
 		
 		<main>
 			<h2>Donate</h2>
+			<article>
+				<p>If you would like to contribute, fill out our form below</p>
+				
+				<form method="post" id="donationForm">					
+					<fieldset>
+						<legend>Payment Information</legend>
+						<div class="row">
+							<div class="fieldName">Amount<span class="red">*</span><span class="red"></div>
+							<div class="small">
+								<input required type="number" min="0" value="10.00" step="0.01" name="donationAmount">
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="fieldName">Card Number<span class="red">*</span><span class="red"></div>
+							<div class="medium">
+							<input 
+								required
+								type="number"
+								min="0"
+								max="9999999999999999"
+								pattern="[0-9]{13,16}"
+								placeholder="XXXXXXXXXXXXXXXX"
+								title="Please enter your 16 digit card number without any spaces or dashes"
+								name="cardNum"
+								class="hideArrows"
+							>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="fieldName">Expiration Date<span class="red">*</span><span class="red"></div>
+							<div>
+								<select name="cardExpMonth">
+									<option value="01">Jan</option>
+									<option value="02">Feb</option>
+									<option value="03">Mar</option>
+									<option value="04">Apr</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">Aug</option>
+									<option value="09">Sept</option>
+									<option value="10">Oct</option>
+									<option value="11">Nov</option>
+									<option value="12">Dec</option>
+								</select>
+							</div>
+							<div>
+								<select name="cardExpYear">
+									<option value="2017">2017</option>
+									<option value="2018">2018</option>
+									<option value="2019">2019</option>
+									<option value="2020">2020</option>
+									<option value="2021">2021</option>
+									<option value="2022">2022</option>
+									<option value="2023">2023</option>
+									<option value="2024">2024</option>
+									<option value="2025">2025</option>
+									<option value="2026">2026</option>
+									<option value="2027">2027</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="fieldName">CVC<span class="red">*</span></div>
+							<div class="number">
+							<input
+								required
+								type="number"
+								min="0"
+								max="999"
+								pattern="[0-9]{3}"
+								title="Please enter the 3 digit CVC code from the back of your card"
+								placeholder="XXX"
+								name="cardCVC"
+								class="hideArrows"
+							>
+							</div>
+						</div>						
+					</fieldset>
+					
+					<fieldset>
+						<legend>Billing Information</legend>
+						<div class="row">
+							<div class="fieldName">Name<span class="red">*</span></div>
+							<div class="small">
+								<input required type="text" name="fName">
+								<sup>First</sup>
+							</div>
+							<div class="small">
+								<input required type="text" name="lName">
+								<sup>Last</sup>
+							</div>
+						</div>
+						<div class="row">
+							<div class="fieldName">Email<span class="red">*</span></div>
+							<div class="med"><input required type="email" name="email"></div>
+						</div>
+						<div class="row">
+							<div class="fieldName">Phone<span class="red">*</span></div>
+							<div class="med">
+							<!--
+								regex courtesy of http://www.regexlib.com/REDetails.aspx?regexp_id=45
+							-->
+							<input
+								required
+								type="tel"								
+								pattern="^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$"
+								title="Please enter a phone number"
+								placeholder="XXX XXX XXXX"
+								name="phone">
+							</div>
+						</div>
+						<div class="row">
+							<div class="fieldName">Address<span class="red">*</span></div>
+							<div class="large"><input required type="text" name="address"></div>
+						</div>
+					</fieldset>
+					
+					<input type="submit" value="Submit" class="button">
+					<input type="reset" value="Reset" class="button">
+					</table>
+				</form>
+			</article>
 		</main>
 		
 		
@@ -50,6 +176,9 @@
 			<em>&copy; The Hi-Score Foundation 2017</em>
 		</footer>
 	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="scripts/donationAction.js"></script>
 
 </body>
 </html>
