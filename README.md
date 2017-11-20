@@ -1,44 +1,45 @@
-##What Is This?
+#What Is This?
 This website is my combined term projects for CIT 180 HTML and CSS Programming and CIT 190 JavaScript Programming.
 
-##What Is The High Score Foundation
+#What Is The High Score Foundation
 The High Score Foundation is a fictitious non-profit organization. Any resemblence to any real company or organization is purely coincidental.
 
 
 ##CIT 180
-Completed Pages
-	-index.html
+###Completed Pages
+	- index.html
 		known issues: none
-	-games.html
+	- games.html
 		known issues: none
-	-news.html
+	- news.html
 		known issues: none
 	
-Pages In Progress
-	-donate.html
+###Pages In Progress
+	- donate.html
 		known issues: Form is only validated through html. HTML can be tampered with to create invalid data entries. However, the data is not actually being used by anything, so this is low priority.
 	
-Pages Not Yet Started
-	-getInvolved.html
-	-faqs.html
-	-aboutUs.html
-	-contactUs.html
+###Pages Not Yet Started
+	- getInvolved.html
+	- faqs.html
+	- aboutUs.html
+	- contactUs.html
 		known issues: These pages are just skeletons and do not contain any content yet
 	
 
 ##CIT 190
-Completed Games
-	-snake
+###Completed Games
+	- snake
 		known issues: none
-	-hangman
+	- hangman
 		known issues: none
 
-Games In Progress
+###Games In Progress
 
-Games Not Yet Started
-	-pong
+###Games Not Yet Started
+	- pong
 		known issues: Rather than split my time between all 3 games I chose to not work on the next until the one before was finished.
 	
 	
-
+This readme was formatted for github.com.
+To view properly take a look at my repo at https://github.com/klam141/Term_Project
 	
