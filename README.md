@@ -13,6 +13,8 @@ The High Score Foundation is a fictitious non-profit organization. Any resemblen
 		known issues: none
 	- news.html
 		known issues: none
+	- aboutUs.html
+		known issues: none
 	
 ### Pages In Progress
 	- donate.html
@@ -21,7 +23,6 @@ The High Score Foundation is a fictitious non-profit organization. Any resemblen
 ### Pages Not Yet Started
 	- getInvolved.html
 	- faqs.html
-	- aboutUs.html
 	- contactUs.html
 		known issues: These pages are just skeletons and do not contain any content yet
 	
