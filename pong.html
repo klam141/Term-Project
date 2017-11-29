@@ -44,20 +44,9 @@
 		<main>
 			<h2>Pong</h2>
 			
-			<article>
-				<div id="game"><!--This box will be filled by javascript-->
-					Enable JavaScript to play this game
-					<div class="scoreboard">
-						<!--This box will show the current score-->
-						<div class="left score"></div>
-						<div class="right score"></div>
-					</div>
-					<div class="board">
-						<!--This box will contain the ball and paddles-->
-						<div class="left paddle"></div>
-						<div class="ball"></div>
-						<div class="right paddle"></div>
-					</div>
+			<article class="center-parent full-width">
+				<div id="game" class="center-child" tabindex="1"><!--This box will be filled by javascript-->
+					Enable JavaScript to play this game					
 				</div>
 			</article>
 			
@@ -86,6 +75,10 @@
 			<em>&copy; The Hi-Score Foundation 2017</em>
 		</footer>
 	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="scripts/pong/classes.js"></script>
+	<script src="scripts/pong/pong.js"></script>
 
 </body>
 </html>
